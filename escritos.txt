@@ -1,0 +1,30 @@
+-> ver como lidar com o desdobro de BBAS3
+    -> não muda nada.... pq para a conta do y1 e y2 eu levo em consideração
+    o total de dividendos pagos sobre o TOTAL PAGO por aquelas ação....
+    -> nisso, a quantidade pouco importa....
+    -> vai começar a ser considerado nos próximos períodos em que contabilizara-se
+    a compra já tendo tido o desdobramento.
+
+-> ver como lidar com tickers 'duplicados'. Ex: TAEE4 x TAEE11, CMIG3 x CMIG4
+    -> não dá pra simplesmente trocar o nome pq foram pagas diferentes preços para cada papel....
+
+relembrar como a conta na query sql está sendo feita... - ok
+
+---------------
+
+TRPL4 -> não tem tag along
+CMIG -> deu um valor bem grande, além de cmig3 ter uma baixíssima liquidez....
+EALT -> baixa liquidez e nenhuma das ações tem tag along...
+
+-------------------------
+
+Método de investimento:
+    y1 e y2
+    -> y1: só serão elegidas à compra aquelas ações que tiverem y1 >= 6% nos últimos 12 meses
+        -> não é o y1 que estamos calculando lá na nossa query SQL... e sim o y1 considerando
+        o preço de mercado atual da ação....
+    -> y2: serão vendidas as ações cujos y2 tenham sido menores que 6% por dois anos seguidos
+        -> no nosso caso, 4 períodos de análise consecutivos....
+    -> de resto, pode seguir o nosso método de proporção de y2 mesmo.....
+        -> reinvestindo proporcionalmente aos dividendos pagos por cada ação... caso estas atendam
+        ao 1o critério acima (y1 >= 6%)
