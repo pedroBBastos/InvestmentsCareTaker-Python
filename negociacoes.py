@@ -5,7 +5,7 @@ import sqlite3
 def convert_to_float(value):
     return float(value.replace('.', '').replace(',', '.'))
 
-df = pd.read_csv('movimentacao-07-23-a-06-24.csv')
+df = pd.read_csv('./data/movimentacao-07-24-a-12-24.csv')
 df.info()
 
 print(df['Movimentação'].unique())
@@ -23,11 +23,6 @@ pattern = r'([A-Z]{4}[0-9]{1,2})'
 # print(matches)
 
 df_only_compras['Produto'] = df_only_compras['Produto'].str.extract(pattern, expand=False)
-# print(df_only_compras[['Entrada/Saída', 'Produto', 'Quantidade', 'Data']])
-
-# RECOMPRA BESTA DA ITAUSA
-df_only_compras = df_only_compras.drop(400)
-df_only_compras = df_only_compras.drop(404)
 # print(df_only_compras[['Entrada/Saída', 'Produto', 'Quantidade', 'Data']])
 
 df_only_compras['Data'] = pd.to_datetime(df_only_compras['Data'], format='%d/%m/%Y').dt.date

@@ -5,7 +5,7 @@ import sqlite3
 def convert_to_float(value):
     return float(value.replace('.', '').replace(',', '.'))
 
-df = pd.read_csv('movimentacao-07-23-a-06-24.csv')
+df = pd.read_csv('./data/movimentacao-07-24-a-12-24.csv')
 df.info()
 
 print(df['Movimentação'].unique())
@@ -17,9 +17,9 @@ df_only_dividends = df[df['Movimentação'].isin(['Juros Sobre Capital Próprio'
 # print(df_only_dividends[['Entrada/Saída', 'Produto', 'Quantidade', 'Data', 'Preço unitário', 'Valor da Operação']])
 
 df_only_dividends['Data'] = pd.to_datetime(df_only_dividends['Data'], format='%d/%m/%Y').dt.date
-start_date = pd.to_datetime('2023-12-28').date()
+start_date = pd.to_datetime('2024-07-01').date()
 print("start -> ", start_date)
-end_date = pd.to_datetime('2024-06-30').date()
+end_date = pd.to_datetime('2024-12-31').date()
 print("end -> ", end_date)
 
 df_only_dividends = df_only_dividends[(df_only_dividends['Data'] > start_date) & (df_only_dividends['Data'] <= end_date)]

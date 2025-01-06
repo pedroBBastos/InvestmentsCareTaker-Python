@@ -1,7 +1,7 @@
 import pandas as pd
 import sqlite3
 
-df = pd.read_json('dolar-07-23-a-06-24.json')
+df = pd.read_json('./data/dolar-07-24-a-12-24.json')
 
 df.info()
 # print(df.head())
@@ -22,9 +22,9 @@ df_reversed = df[['bid', 'timestamp']].iloc[::-1].reset_index(drop=True)
 # for index, row in df_reversed.iterrows():
 #     print(row)
 
-start_date = pd.to_datetime('2023-12-28').date()
+start_date = pd.to_datetime('2024-07-01').date()
 print("start -> ", start_date)
-end_date = pd.to_datetime('2024-06-30').date()
+end_date = pd.to_datetime('2024-12-31').date()
 print("end -> ", end_date)
 
 df_date_filtered = df_reversed[(df_reversed['timestamp'] > start_date) & (df_reversed['timestamp'] <= end_date)]
@@ -43,26 +43,26 @@ print(df_no_duplicates)
 for index, row in df_no_duplicates.iterrows():
     print(row)
 
-# try:
-#     # Connect to the SQLite database (or create it if it doesn't exist)
-#     conn = sqlite3.connect('myInvestments.db')
-#     cursor = conn.cursor()
+try:
+    # Connect to the SQLite database (or create it if it doesn't exist)
+    conn = sqlite3.connect('myInvestments.db')
+    cursor = conn.cursor()
 
-#     # Convert DataFrame to list of tuples
-#     rows_to_insert = [tuple(x) for x in df_no_duplicates[['timestamp', 'bid']].values]
+    # Convert DataFrame to list of tuples
+    rows_to_insert = [tuple(x) for x in df_no_duplicates[['timestamp', 'bid']].values]
 
-#     # Insert rows into the table
-#     cursor.executemany('''
-#         INSERT INTO cotacao_dolar (data, valor)
-#         VALUES (?, ?)
-#     ''', rows_to_insert)
+    # Insert rows into the table
+    cursor.executemany('''
+        INSERT INTO cotacao_dolar (data, valor)
+        VALUES (?, ?)
+    ''', rows_to_insert)
 
-#     # Commit the transaction
-#     conn.commit()
+    # Commit the transaction
+    conn.commit()
 
-# except sqlite3.Error as e:
-#     print(f"An error occurred: {e}")
-# finally:
-#     if conn:
-#         # Close the connection
-#         conn.close()
+except sqlite3.Error as e:
+    print(f"An error occurred: {e}")
+finally:
+    if conn:
+        # Close the connection
+        conn.close()
