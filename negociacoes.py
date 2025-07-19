@@ -3,9 +3,10 @@ import numpy as np
 import sqlite3
 
 def convert_to_float(value):
+    value = str(value)
     return float(value.replace('.', '').replace(',', '.'))
 
-df = pd.read_csv('./data/movimentacao-07-24-a-12-24.csv')
+df = pd.read_csv('./data/movimentacao-2024-07-01-a-2025-06-30-Movimentação.csv')
 df.info()
 
 print(df['Movimentação'].unique())
@@ -13,6 +14,12 @@ print(df['Movimentação'].unique())
 # df_only_compras = df[(df['Movimentação'] == 'Transferência - Liquidação') & (df['Entrada/Saída'] == 'Credito')]
 df_only_compras = df[df['Movimentação'] == 'Transferência - Liquidação']
 # print(df_only_compras[['Entrada/Saída', 'Produto', 'Quantidade']])
+
+df_only_compras['Data'] = pd.to_datetime(df_only_compras['Data'], format='%d/%m/%Y').dt.date
+start_date = pd.to_datetime('2025-01-01').date()
+print("start -> ", start_date)
+end_date = pd.to_datetime('2025-06-30').date()
+print("end -> ", end_date)
 
 df_only_compras['Entrada/Saída'] = np.where(df_only_compras['Entrada/Saída'] == 'Credito', 'C', 'V')
 
@@ -43,11 +50,13 @@ df_only_compras['Valor da Operação'] = df_only_compras['Valor da Operação'].
 df_only_compras['Preço unitário'] = pd.to_numeric(df_only_compras['Preço unitário'], errors='coerce')
 df_only_compras['Valor da Operação'] = pd.to_numeric(df_only_compras['Valor da Operação'], errors='coerce')
 
-print(df_only_compras[['Entrada/Saída', 'Produto', 'Quantidade', 'Data', 'Preço unitário', 'Valor da Operação']])
+# print(df_only_compras[['Entrada/Saída', 'Produto', 'Quantidade', 'Data', 'Preço unitário', 'Valor da Operação']])
+for index, row in df_only_compras.iterrows():
+    print(row)
 
 try:
     # Connect to the SQLite database (or create it if it doesn't exist)
-    conn = sqlite3.connect('myInvestments.db')
+    conn = sqlite3.connect('./data/myInvestments.db')
     cursor = conn.cursor()
 
     # Convert DataFrame to list of tuples

@@ -3,9 +3,10 @@ import numpy as np
 import sqlite3
 
 def convert_to_float(value):
+    value = str(value)
     return float(value.replace('.', '').replace(',', '.'))
 
-df = pd.read_csv('./data/movimentacao-07-24-a-12-24.csv')
+df = pd.read_csv('./data/movimentacao-2024-07-01-a-2025-06-30-Movimentação.csv')
 df.info()
 
 print(df['Movimentação'].unique())
@@ -17,9 +18,9 @@ df_only_dividends = df[df['Movimentação'].isin(['Juros Sobre Capital Próprio'
 # print(df_only_dividends[['Entrada/Saída', 'Produto', 'Quantidade', 'Data', 'Preço unitário', 'Valor da Operação']])
 
 df_only_dividends['Data'] = pd.to_datetime(df_only_dividends['Data'], format='%d/%m/%Y').dt.date
-start_date = pd.to_datetime('2024-07-01').date()
+start_date = pd.to_datetime('2025-01-01').date()
 print("start -> ", start_date)
-end_date = pd.to_datetime('2024-12-31').date()
+end_date = pd.to_datetime('2025-06-30').date()
 print("end -> ", end_date)
 
 df_only_dividends = df_only_dividends[(df_only_dividends['Data'] > start_date) & (df_only_dividends['Data'] <= end_date)]
@@ -40,26 +41,26 @@ df_only_dividends['Valor da Operação'] = pd.to_numeric(df_only_dividends['Valo
 
 print(df_only_dividends[['Entrada/Saída', 'Produto', 'Quantidade', 'Data', 'Preço unitário', 'Valor da Operação']])
 
-try:
-    # Connect to the SQLite database (or create it if it doesn't exist)
-    conn = sqlite3.connect('myInvestments.db')
-    cursor = conn.cursor()
+# try:
+#     # Connect to the SQLite database (or create it if it doesn't exist)
+#     conn = sqlite3.connect('./data/myInvestments.db')
+#     cursor = conn.cursor()
 
-    # Convert DataFrame to list of tuples
-    rows_to_insert = [tuple(x) for x in df_only_dividends[['Data', 'Data', 'Valor da Operação', 'Produto']].values]
+#     # Convert DataFrame to list of tuples
+#     rows_to_insert = [tuple(x) for x in df_only_dividends[['Data', 'Data', 'Valor da Operação', 'Produto']].values]
 
-    # Insert rows into the table
-    cursor.executemany('''
-        INSERT INTO dividendo (data_liquidacao, data_movimentacao, lancamento, ticker)
-        VALUES (?, ?, ?, ?)
-    ''', rows_to_insert)
+#     # Insert rows into the table
+#     cursor.executemany('''
+#         INSERT INTO dividendo (data_liquidacao, data_movimentacao, lancamento, ticker)
+#         VALUES (?, ?, ?, ?)
+#     ''', rows_to_insert)
 
-    # Commit the transaction
-    conn.commit()
+#     # Commit the transaction
+#     conn.commit()
 
-except sqlite3.Error as e:
-    print(f"An error occurred: {e}")
-finally:
-    if conn:
-        # Close the connection
-        conn.close()
+# except sqlite3.Error as e:
+#     print(f"An error occurred: {e}")
+# finally:
+#     if conn:
+#         # Close the connection
+#         conn.close()
